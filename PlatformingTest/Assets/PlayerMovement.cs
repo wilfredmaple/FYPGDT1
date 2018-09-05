@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour {
 
+    [SerializeField]
+    private float MovementSpeed;
+    [SerializeField]
+    private float JumpSpeed;
     private Vector3 MovementDir;
+    private bool m_isAxisInUse = false;
 
 	// Use this for initialization
 	void Start () {
@@ -18,17 +23,25 @@ public class PlayerMovement : MonoBehaviour {
         {
             MovementDir = new Vector3(Input.GetAxis("Horizontal"), 0, 0);
             MovementDir = transform.TransformDirection(MovementDir);
-            MovementDir *= 5;
+            MovementDir *= MovementSpeed;
 
             if(Input.GetAxis("Vertical") > 0)
             {
-                MovementDir.y = 10.0f;
-                MovementDir.x *= 1.5f;
+                if (!m_isAxisInUse)
+                {
+                    MovementDir.y = 10.0f;
+                    m_isAxisInUse = true;
+                }
+            }
+            else
+            {
+                m_isAxisInUse = false;
             }
         }
         else
         {
-            MovementDir.x = Mathf.Lerp(MovementDir.x, 0, Time.deltaTime);
+            MovementDir.x = Input.GetAxis("Horizontal") * MovementSpeed * 1.5f;
+            MovementDir = transform.TransformDirection(MovementDir);
         }
 
         MovementDir.y -= 20.0f * Time.deltaTime;

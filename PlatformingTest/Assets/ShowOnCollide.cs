@@ -16,21 +16,23 @@ public class ShowOnCollide : MonoBehaviour {
 
         GameObject Player = GameObject.FindGameObjectWithTag("Player");
 
-        if (Player.transform.position.y + Player.transform.lossyScale.y / 2 > transform.position.y - transform.lossyScale.y / 2)
+        if(!RendRef.isVisible)
         {
-            Physics.IgnoreCollision(Player.GetComponent<CharacterController>(), GetComponent<Collider>());
+            if (Player.transform.position.y + Player.transform.lossyScale.y / 2 > transform.position.y - transform.lossyScale.y / 2)
+            {
+                Physics.IgnoreCollision(Player.GetComponent<CharacterController>(), GetComponent<Collider>());
+            }
         }
-
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(!RendRef.isVisible)
+        if (other.tag == "Player")
         {
-            if (other.tag == "Player")
+            if (other.gameObject.transform.position.y + other.gameObject.transform.lossyScale.y / 2
+                <= transform.position.y - transform.lossyScale.y / 2)
             {
-                if (other.gameObject.transform.position.y + other.gameObject.transform.lossyScale.y / 2
-                    <= transform.position.y - transform.lossyScale.y / 2)
+                if(!RendRef.isVisible)
                 {
                     Physics.IgnoreCollision(other.GetComponent<CharacterController>(), GetComponent<Collider>(), false);
 
@@ -39,13 +41,13 @@ public class ShowOnCollide : MonoBehaviour {
                     other.GetComponent<PlayerMovement>().SetMovementDir(Reversed);
                     RendRef.enabled = true;
                 }
+                else
+                {
+                    Vector3 Reversed = other.GetComponent<PlayerMovement>().GetMovementDir();
+                    Reversed.y = -Reversed.y;
+                    other.GetComponent<PlayerMovement>().SetMovementDir(Reversed);
+                }
             }
-        }
-        else
-        {
-            Vector3 Reversed = other.GetComponent<PlayerMovement>().GetMovementDir();
-            Reversed.y = -Reversed.y;
-            other.GetComponent<PlayerMovement>().SetMovementDir(Reversed);
         }
     }
 }
