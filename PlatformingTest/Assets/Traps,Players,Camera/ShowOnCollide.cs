@@ -50,4 +50,13 @@ public class ShowOnCollide : MonoBehaviour {
             }
         }
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag != "Player")
+        {
+            Debug.Log("Test");
+            Physics.IgnoreCollision(collision.gameObject.GetComponent<Collider>(), GetComponent<Collider>(), false);
+        }
+    }
 }
