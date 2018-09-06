@@ -8,12 +8,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -2067402452, guid: 1e108ae5f2133934f948edded555f03e, type: 3}
+  m_Script: {fileID: -2067402452, guid: bab6fa851cf5a1a4bba3cec5f191cb8e, type: 3}
   m_Name: VuforiaConfiguration
   m_EditorClassIdentifier: 
   vuforia:
     vuforiaLicenseKey: 
-    ufoLicenseKey: QWU2MytrTC8vLy8vQUFBQUtOYUQ3T0dOdVVQN3Y2NzZCcm5IcStOSUtuMGVnZ3B2bzloTEZMWG55VTRBR3FuUmZTWkhiSm9mV2NRU0tWeEdlSVZMN0lRclNLVnVaWGQ2cDhCeDJlWmVqbWthU2hadG1sbEw2NXA5cjVJSzRBMk9FNU9ScFdyTllEUWM4dHB4K1c2OVk3eGN5R1hrMjNpaW0ya2Q0aFpJd24wMmlqbmFoSEJOcktuTm9Ud3o0M3k2aXJWaHBmODc1Ry9KUWJtUmVURU0yT0JwR2Z4SWlTV1lDMWZ4emp4UVlhWGV4K1NtZ0pXQVlFakYxYzJnMlQ5SzduUHpyaXdWbkhZem9WYXEyWVJiYW5tdFlvYWNEd1hOM2Yza1QwUGFNVEoxNjlqdHRISHZEMXlGT0lCLzV5UkNPRlBoaXBYT1VmOVZWRlNPVmQzbFhxK3BQSzlqNG12RWJsREJlaXVRNUkrRndPVzc2eUFZT1RrVWYwRVU=
+    ufoLicenseKey: QVdZenBLRC8vLy8vQUFBQUtKTjhiU2FCL2tCNGtsaldyaTVvY2RBMEVaemw2T2hWanpmYzJaNE5DcHdlY3hJb1lxR0tIQXYvOFJCV2NEVTB3VXlwMEZXSHZ6Wk90YWxkVGk1YzJJV0tqM3NYLzRtVHV2RDdOc1lqNjRnQXVFR0p5YlZPakVIUnVEU0lDUzlTK1NHemxUVTZuTDNPMVplZWJLaElMMzQ1UEdUR3RDeFRaZ2E2d2haTHc1ekxNblZ3TW9PYklXdGkydkxIMUxzQlNUcDVORXJLZjhhWjY0eUlIK2Irb21ISVZiNnJjZXhkclhZTWYzSHBXd0crc0dMT3AyRXJhM1RBdk82dlU2cU5nVEQ4bTNsSFBqUEUxc3lrOHR4aitQU1BTL3dOSjVZb21kUlJ2TDJXdUkrMml6ZUNTLzNGRzBnYmFra25iWm5BV1ZPK29MWDhPQW5YREFuRmVkMmcxemFwazRMWFBaU0xnTUhHR0VvaExKVlo=
     delayedInitialization: 0
     cameraDeviceModeSetting: -1
     maxSimultaneousImageTargets: 1
@@ -21,7 +21,7 @@ MonoBehaviour:
     useDelayedLoadingObjectTargets: 0
     cameraDirection: 0
     mirrorVideoBackground: 0
-    version: 1.0.0
+    version: 7.2.24
   digitalEyewear:
     cameraOffset: 0.06
     distortionRenderingLayer: 31
