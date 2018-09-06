@@ -5,7 +5,7 @@ using UnityEngine;
 public class MoveOnCollide : MonoBehaviour {
 
     [SerializeField]
-    private Vector3 PositionToMove;
+    private Vector3 MovePosition;
     [SerializeField]
     private float MoveSpeed;
 
@@ -20,13 +20,13 @@ public class MoveOnCollide : MonoBehaviour {
 	void Update () {
 		if(IsMoving)
         {
-            if(Vector3.Distance(this.transform.position, PositionToMove) > 0.1f)
+            if(Vector3.Distance(this.transform.position, MovePosition) > 0.1f)
             {
-                this.transform.position = Vector3.Lerp(this.transform.position, PositionToMove, Time.deltaTime * MoveSpeed);
+                this.transform.position = Vector3.Lerp(this.transform.position, MovePosition, Time.deltaTime * MoveSpeed);
             }
             else
             {
-                this.transform.position = PositionToMove;
+                this.transform.position = MovePosition;
             }
         }
 	}

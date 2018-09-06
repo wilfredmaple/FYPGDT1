@@ -18,7 +18,7 @@ public class Enemy : MonoBehaviour {
     private ENEMYTYPES CurrType;
 
     [SerializeField]
-    private Vector3 WalkDirection;
+    private float WalkDirection;
 
     [SerializeField]
     private float JumpSpeed;
@@ -28,29 +28,65 @@ public class Enemy : MonoBehaviour {
     [SerializeField]
     private GameObject PatrolPointB;
     [SerializeField]
-    private bool PatrolToA;
+    private bool PatrolToA = false;
 
-    private bool HiddenOff = false;
+    private bool Hidden = true;
+
+    Rigidbody RigidRef;
 
 	// Use this for initialization
 	void Start () {
-		
+        RigidRef = GetComponent<Rigidbody>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		switch(CurrType)
+
+	}
+
+    private void FixedUpdate()
+    {
+        bool IsGrounded = Physics.Raycast(transform.position, -transform.up, transform.lossyScale.y / 2 + 0.05f);
+        Debug.DrawRay(transform.position, -transform.up * (transform.lossyScale.y / 2 + 0.05f), Color.white);
+
+        switch (CurrType)
         {
             case (ENEMYTYPES.WALK):
+                RigidRef.MovePosition(RigidRef.position + new Vector3(WalkDirection, 0) * Time.fixedDeltaTime);
                 break;
             case (ENEMYTYPES.PATROL):
+                if(PatrolToA)
+                {
+                    if(Vector3.Distance(RigidRef.position, PatrolPointA.transform.position) > 0.1f)
+                    {
+                        RigidRef.MovePosition(RigidRef.position + (PatrolPointA.transform.position - RigidRef.position).normalized * Mathf.Abs(WalkDirection) * Time.fixedDeltaTime);
+                    }
+                    else
+                    {
+                        PatrolToA = false;
+                    }
+                }
+                else
+                {
+                    if (Vector3.Distance(RigidRef.position, PatrolPointB.transform.position) > 0.1f)
+                    {
+                        RigidRef.MovePosition(RigidRef.position + (PatrolPointB.transform.position - RigidRef.position).normalized * Mathf.Abs(WalkDirection) * Time.fixedDeltaTime);
+                    }
+                    else
+                    {
+                        PatrolToA = true;
+                    }
+                }
                 break;
             case (ENEMYTYPES.WALKJUMP):
+                RigidRef.MovePosition(RigidRef.position + new Vector3(WalkDirection, 0) * Time.fixedDeltaTime);
+                if(IsGrounded)
+                {
+                    RigidRef.AddForce(transform.up * JumpSpeed, ForceMode.VelocityChange);
+                }
                 break;
             case (ENEMYTYPES.PATROLJUMP):
-                break;
-            case (ENEMYTYPES.HIDDENWALKJUMP):
-                if(HiddenOff)
+                if (PatrolToA)
                 {
 
                 }
@@ -59,8 +95,20 @@ public class Enemy : MonoBehaviour {
 
                 }
                 break;
+            case (ENEMYTYPES.HIDDENWALKJUMP):
+                if (Hidden)
+                    RigidRef.MovePosition(RigidRef.position + new Vector3(WalkDirection, 0) * Time.fixedDeltaTime);
+                else
+                {
+                    RigidRef.MovePosition(RigidRef.position + new Vector3(WalkDirection, 0) * Time.fixedDeltaTime);
+                    if (IsGrounded)
+                    {
+                        RigidRef.AddForce(transform.up * JumpSpeed, ForceMode.VelocityChange);
+                    }
+                }
+                break;
             case (ENEMYTYPES.HIDDENPATROLJUMP):
-                if(HiddenOff)
+                if (Hidden)
                 {
 
                 }
@@ -70,7 +118,7 @@ public class Enemy : MonoBehaviour {
                 }
                 break;
         }
-	}
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -78,7 +126,7 @@ public class Enemy : MonoBehaviour {
         {
             if (CurrType.ToString().Contains("HIDDEN"))
             {
-                HiddenOff = true;
+                Hidden = false;
             }
         }
         else
@@ -90,6 +138,23 @@ public class Enemy : MonoBehaviour {
 
                 }
             }
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag == "Killbox")
+        {
+
+        }
+
+        if (collision.gameObject.transform.position.y - collision.gameObject.transform.lossyScale.y / 2
+            >= transform.position.y + transform.lossyScale.y / 2)
+        {
+            Vector3 Knockback_Y = RigidRef.velocity;
+            Knockback_Y *= -2;
+
+            RigidRef.AddForce(Knockback_Y, ForceMode.VelocityChange);
         }
     }
 }

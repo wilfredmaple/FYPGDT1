@@ -11,50 +11,76 @@ public class PlayerMovement : MonoBehaviour {
     private Vector3 MovementDir;
     private bool m_isAxisInUse = false;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
+    Rigidbody RigidRef;
+
+    // Use this for initialization
+    void Start () {
+		RigidRef = GetComponent<Rigidbody>();
+        Physics.gravity = new Vector3(0, -20.0f, 0);
+    }
 	
 	// Update is called once per frame
 	void Update () {
-        CharacterController ControlRef = GetComponent<CharacterController>();
-        if(ControlRef.isGrounded)
+        bool IsGrounded = Physics.Raycast(transform.position, -transform.up, transform.lossyScale.y + 0.05f);
+
+        if(IsGrounded)
         {
-            MovementDir = new Vector3(Input.GetAxis("Horizontal"), 0, 0);
-            MovementDir = transform.TransformDirection(MovementDir);
-            MovementDir *= MovementSpeed;
+            MovementDir = Vector3.zero;
+            MovementDir.x = Input.GetAxis("Horizontal");
 
             if(Input.GetAxis("Vertical") > 0)
             {
-                if (!m_isAxisInUse)
+                if(!m_isAxisInUse)
                 {
-                    MovementDir.y = 10.0f;
+                    RigidRef.AddForce(transform.up * JumpSpeed, ForceMode.VelocityChange);
+
                     m_isAxisInUse = true;
                 }
             }
-            else
+            else if (Input.GetAxis("Vertical") == 0)
             {
                 m_isAxisInUse = false;
             }
         }
         else
         {
-            MovementDir.x = Input.GetAxis("Horizontal") * MovementSpeed * 1.5f;
-            MovementDir = transform.TransformDirection(MovementDir);
+            MovementDir.x = Input.GetAxis("Horizontal") * 1.5f;
         }
-
-        MovementDir.y -= 20.0f * Time.deltaTime;
-        ControlRef.Move(MovementDir * Time.deltaTime);
 	}
 
-    public Vector3 GetMovementDir()
+    void FixedUpdate()
     {
-        return MovementDir;
+        RigidRef.MovePosition(RigidRef.position + MovementDir * MovementSpeed * Time.fixedDeltaTime);
     }
 
-    public void SetMovementDir(Vector3 n_MovementDir)
+    private void OnCollisionEnter(Collision collision)
     {
-        MovementDir = n_MovementDir;
+        if (collision.gameObject.transform.position.y - collision.gameObject.transform.lossyScale.y / 2
+            >= transform.position.y + transform.lossyScale.y / 2)
+        {
+            Vector3 Knockback_Y = RigidRef.velocity;
+            Knockback_Y *= -2;
+
+            RigidRef.AddForce(Knockback_Y, ForceMode.VelocityChange);
+
+            PlayerPowerUp PowerUpRef = GetComponent<PlayerPowerUp>();
+            if (PowerUpRef != null)
+            {
+                if(PowerUpRef.GetPowerUp() == POWERUPS.SUPERJUMP)
+                {
+                    Debug.Log("Instant Die");
+                }
+            }
+        }
+    }
+
+    public void SetJumpSpeed(float n_JumpSpeed)
+    {
+        JumpSpeed = n_JumpSpeed;
+    }
+
+    public float GetJumpSpeed()
+    {
+        return JumpSpeed;
     }
 }
